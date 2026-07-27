@@ -12,7 +12,7 @@ Deadline Doctor is a small triage tool for exactly that moment. You "admit" your
 
 ## b. Live URL
 
-🔗 [**\[PASTE YOUR DEPLOYED VERCEL URL HERE\]**](https://deadline-doctor-zzp5.vercel.app/)
+🔗 [**\[Live Website Link\]**](https://deadline-doctor-zzp5.vercel.app/)
 
 ## c. Features
 
