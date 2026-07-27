@@ -1,5 +1,5 @@
 // Vercel serverless function (Node.js runtime).
-// Receives the user's task list + daily capacity, asks a Groq-hosted model to triage it,
+// Receives the user's task list + daily capacity, asks Gemini to triage it,
 // and returns strict JSON the frontend can render directly.
 
 const SYSTEM_PROMPT = `You are "Deadline Doctor," an admissions-triage assistant for an overloaded student or worker.
@@ -21,7 +21,7 @@ Respond with ONLY valid JSON, no markdown fences, no commentary outside the JSON
   "verdict": "ok" | "overloaded",
   "summary": "one sentence, plain language",
   "days": [ { "label": "Mon 28 Jul", "plan": "what to do this day, specific and short" } ],
-  "cuts": ["short actionable suggestion", ...]  // omit or empty array if verdict is "ok"
+  "cuts": ["short actionable suggestion", ...]
 }`;
 
 export default async function handler(req, res) {
@@ -30,9 +30,9 @@ export default async function handler(req, res) {
     return;
   }
 
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    res.status(500).json({ error: 'Server is missing GROQ_API_KEY. Set it in your hosting environment variables.' });
+    res.status(500).json({ error: 'Server is missing GEMINI_API_KEY. Set it in your hosting environment variables.' });
     return;
   }
 
@@ -46,32 +46,35 @@ export default async function handler(req, res) {
   const userPayload = JSON.stringify({ today, dailyHours, tasks });
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 1200,
-        temperature: 0.3,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: userPayload }
-        ]
-      })
-    });
+    const response = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey
+        },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ role: 'user', parts: [{ text: userPayload }] }],
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 2048,
+            responseMimeType: 'application/json',
+            thinkingConfig: { thinkingBudget: 0 }
+          }
+        })
+      }
+    );
 
     if (!response.ok) {
       const errBody = await response.text();
-      res.status(502).json({ error: `Groq API error: ${errBody.slice(0, 300)}` });
+      res.status(502).json({ error: `Gemini API error: ${errBody.slice(0, 300)}` });
       return;
     }
 
     const data = await response.json();
-    const rawText = (data.choices?.[0]?.message?.content || '').trim();
+    const rawText = (data.candidates?.[0]?.content?.parts?.[0]?.text || '').trim();
 
     let parsed;
     try {
