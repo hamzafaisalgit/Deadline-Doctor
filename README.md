@@ -70,22 +70,7 @@ Respond with ONLY valid JSON, no markdown fences, no commentary outside the JSON
 - **Hosting:** Vercel (free tier).
 - **Built with the help of:** Claude (Anthropic), used as a coding assistant to write and review this codebase.
 
-## f. Screenshots
-
-> **[ADD AT LEAST 3 SCREENSHOTS HERE after you deploy — see checklist below]**
-> Suggested shots:
-> 1. Empty state / intake form
-> 2. Chart view with a few tasks admitted, showing the pulse line
-> 3. A completed AI diagnosis with a day-by-day plan
-> 4. (bonus) an "overloaded" verdict showing the cuts section
-
-```markdown
-![Intake form](screenshots/1-intake.png)
-![Task chart with pulse line](screenshots/2-chart.png)
-![AI diagnosis result](screenshots/3-diagnosis.png)
-```
-
-## g. How to run this project
+## f. How to run this project
 
 ### Run locally
 ```bash
