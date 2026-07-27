@@ -1,0 +1,7 @@
+{
+  "name": "deadline-doctor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Triage your workload. AI-powered rescue-plan generator for overloaded deadlines."
+}

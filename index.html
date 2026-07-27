@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deadline Doctor — triage your workload</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="chart-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-cross">+</span>
+      <span class="brand-name">Deadline Doctor</span>
+    </div>
+    <div class="brand-tag">intake &amp; triage for your workload</div>
+  </div>
+  <svg class="pulse-line" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+    <polyline id="pulsePath" points="0,30 1200,30" />
+  </svg>
+</header>
+
+<main class="chart-body">
+
+  <section class="panel intake" aria-label="Add a task">
+    <h2 class="panel-title"><span class="eyebrow">01</span> Intake</h2>
+    <form id="taskForm" class="intake-form">
+      <div class="field">
+        <label for="title">Task</label>
+        <input id="title" type="text" placeholder="e.g. Finish physics lab report" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="deadline">Deadline</label>
+          <input id="deadline" type="date" required>
+        </div>
+        <div class="field">
+          <label for="hours">Est. hours needed</label>
+          <input id="hours" type="number" min="0.5" step="0.5" placeholder="3" required>
+        </div>
+        <div class="field">
+          <label for="priority">Stakes</label>
+          <select id="priority">
+            <option value="low">Low — nice to finish</option>
+            <option value="medium" selected>Medium — matters</option>
+            <option value="high">High — can't miss</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn-admit">Admit task</button>
+    </form>
+  </section>
+
+  <section class="panel chart" aria-label="Current tasks">
+    <h2 class="panel-title"><span class="eyebrow">02</span> Chart <span class="count" id="taskCount"></span></h2>
+    <div id="taskList" class="task-list">
+      <p class="empty-state">No tasks admitted yet. Add one on the left — that's the invitation, not the problem.</p>
+    </div>
+  </section>
+
+  <section class="panel diagnosis" aria-label="AI rescue plan">
+    <h2 class="panel-title"><span class="eyebrow">03</span> Diagnosis</h2>
+    <div class="capacity-row">
+      <label for="dailyHours">Realistic hours/day you can give this</label>
+      <input id="dailyHours" type="number" min="0.5" step="0.5" value="3">
+      <button id="diagnoseBtn" class="btn-diagnose">Run diagnosis</button>
+    </div>
+    <div id="diagnosisResult" class="diagnosis-result">
+      <p class="empty-state">Add at least one task, then run the diagnosis. The AI will sequence your work, flag anything unrealistic, and tell you straight if something has to be cut.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="chart-footer">
+  <p>Deadline Doctor — built for the moment you have too much and too little time.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
